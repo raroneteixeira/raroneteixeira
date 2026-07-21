@@ -69,8 +69,12 @@ Each script has its parameters at the top and exports to `stl/` when run.
 
 ## Project: Ralo Oculto Inteligente
 
-**Current version: V2.1** (`parts/ralo_oculto_v2.py`) — real dimensions
-890 × 50 mm, 35 mm channel depth, in 5 printable segments (~178 mm, fits
+**Current version: V2.2** (`parts/ralo_oculto_v2.py`) — matches the real
+channel profile: 890 × 50 mm mouth, 15 mm deep edges with a 4 mm ridge
+(the frame walls get a bottom rebate that keys over it), 30 mm central
+trough, and a ~73 mm outlet pocket with a 40 mm pipe. Frame is 15 mm
+tall and sits flush with the floor. Everything else per V2.1: 5 printable
+segments (~178 mm, fits
 any Bambu bed): glued base with alignment keys, flip-up doors hinged on a
 1.75 mm filament pin, door tops covered in rounded massage/anti-slip
 domes, and a central removable hair-catcher basket whose closed bottom

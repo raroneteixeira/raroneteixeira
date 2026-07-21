@@ -38,11 +38,21 @@ from build123d import Box, Cylinder, Pos, Rot, Sphere, export_stl
 TOTAL_LENGTH = 890.0
 SEG_COUNT = 5
 SEG_LENGTH = TOTAL_LENGTH / SEG_COUNT   # 178 mm — cabe em qualquer Bambu
-WIDTH = 50.0
-CHANNEL_DEPTH = 35.0    # profundidade útil medida no banheiro
+WIDTH = 49.0            # boca do canal = 50; 0.5 mm de folga por lado
 
-FRAME_H = 12.0          # altura da moldura da base
-WALL = 2.0              # parede externa
+# perfil real do canal (fotos de 2026-07-21):
+#   bordas: 15 mm de profundidade, com relevo de ~4 mm onde a base assenta
+#   centro: 30 mm de profundidade (calha de escoamento)
+#   bolsão da saída: ~73 mm de comprimento, ~30-35 mm, cano de 40 mm
+EDGE_DEPTH = 15.0       # profundidade nas bordas = altura da moldura
+RELEVO_H = 4.6          # altura do rebaixo no pé da parede (relevo = 4 mm)
+RELEVO_W = 3.0          # quanto o rebaixo entra a partir da face externa
+POCKET_DEPTH = 30.0     # bolsão da saída (use 30 por segurança; foto diz 35)
+POCKET_LENGTH = 73.0
+OUTLET_D = 40.0
+
+FRAME_H = EDGE_DEPTH    # moldura apoia na borda de 15 mm, topo rente ao piso
+WALL = 4.5              # parede grossa p/ acomodar o rebaixo do relevo
 LEDGE_W = 4.0           # aba de apoio da porta (lado livre)
 LEDGE_T = 1.5
 DOOR_T = 5.0            # porta grossa = "bem resistente"
@@ -53,7 +63,7 @@ KEY_CLEARANCE = 0.35    # folga das chaves de alinhamento (ajuste com o gauge)
 BUMP_SPHERE_R = 3.0
 BUMP_HEIGHT = 1.3       # quanto o domo sobressai do topo da porta
 BUMP_PITCH_X = 12.0
-BUMP_ROWS_Y = (-15.0, -8.0, -1.0, 6.0, 13.0)
+BUMP_ROW_COUNT = 5
 
 # dobradiça — pino = filamento 1.75 mm
 PIN_HOLE_R = 1.15
@@ -62,25 +72,33 @@ KNUCKLE_LEN = 14.0
 BASE_KNUCKLE_XS = (20.0, 87.0, 154.0)
 DOOR_KNUCKLE_XS = (53.5, 120.5)
 
-# segmento central — poço e cesto
-WELL_LENGTH = 62.0
+# segmento central — poço e cesto (dimensionados p/ o bolsão da saída)
+WELL_LENGTH = 62.0      # < POCKET_LENGTH (73)
 WELL_WALL = 2.0
-BASKET_DEPTH = 24.0     # abaixo da flange — dimensionado p/ 35 mm de fosso
+BASKET_DEPTH = 20.0     # abaixo da flange — cabe no bolsão de 30 mm
 BASKET_WALL = 1.6
 BASKET_SLOT_W = 2.0
 BASKET_SLOT_PITCH = 6.0
-WATER_SEAL_H = 10.0     # parede cega inferior = coluna do selo d'água
+WATER_SEAL_H = 9.0      # parede cega inferior = coluna do selo d'água
 
 STL_DIR = Path(__file__).resolve().parent.parent / "stl"
 
 # ------------------------------------------------------------- derivados
-inner_half = WIDTH / 2 - WALL                      # 23.0
-door_rest_z = FRAME_H - DOOR_T - DOOR_RECESS       # 6.5
-hinge_y = inner_half - 4.3                         # 18.7 — eixo da dobradiça
-hinge_z = door_rest_z + DOOR_T / 2                 # 9.0
+inner_half = WIDTH / 2 - WALL                      # 20.0
+door_rest_z = FRAME_H - DOOR_T - DOOR_RECESS       # 9.5
+hinge_y = inner_half - 4.3                         # 15.7 — eixo da dobradiça
+hinge_z = door_rest_z + DOOR_T / 2                 # 12.0
 door_free_edge = -(inner_half - 2.5)               # fresta de 2.5 mm = vazão
 well_x0 = (SEG_LENGTH - WELL_LENGTH) / 2           # 58
 well_x1 = well_x0 + WELL_LENGTH                    # 120
+
+# fileiras dos domos distribuídas na largura útil da porta
+_row_lo = door_free_edge + BUMP_SPHERE_R + 0.5
+_row_hi = hinge_y - BUMP_SPHERE_R - 0.5
+BUMP_ROWS_Y = tuple(
+    _row_lo + i * (_row_hi - _row_lo) / (BUMP_ROW_COUNT - 1)
+    for i in range(BUMP_ROW_COUNT)
+)
 
 
 def box_at(cx, cy, cz, length, width, height):
@@ -140,12 +158,22 @@ def build_base(central=False):
     solids.append(box_at(SEG_LENGTH + 1.8, 0, 1.5, 4.0, 8.0, 3.0))
 
     part = solids[0] + solids[1:]
-    # chave fêmea (x = início) e furo do pino de dobradiça, de ponta a ponta
-    part -= [
+    cuts = [
+        # chave fêmea (x = início)
         box_at(2.2, 0, 1.6, 4.4 + KEY_CLEARANCE, 8.0 + 2 * KEY_CLEARANCE,
                3.0 + 2 * KEY_CLEARANCE),
+        # furo do pino de dobradiça, de ponta a ponta
         cyl_x(SEG_LENGTH / 2, hinge_y, hinge_z, SEG_LENGTH + 20, PIN_HOLE_R),
     ]
+    # rebaixo no pé das duas paredes: encaixa por cima do relevo de 4 mm
+    # da borda do canal — trava a base lateralmente e vira canal de cola.
+    # O lábio interno restante (WALL - RELEVO_W) apoia na borda de 15 mm.
+    for sign in (-1, 1):
+        cuts.append(box_at(SEG_LENGTH / 2,
+                           sign * (WIDTH / 2 - RELEVO_W / 2 + 0.5),
+                           RELEVO_H / 2 - 0.05,
+                           SEG_LENGTH + 10, RELEVO_W + 1.0, RELEVO_H + 0.1))
+    part -= cuts
     return part
 
 
@@ -246,11 +274,14 @@ if __name__ == "__main__":
     STL_DIR.mkdir(exist_ok=True)
     depth_needed = FRAME_H - (door_rest_z - 1.5 - BASKET_DEPTH)
     print(f"{TOTAL_LENGTH:.0f} mm em {SEG_COUNT} segmentos de {SEG_LENGTH:.0f} mm, "
-          f"largura {WIDTH:.0f} mm")
-    print(f"profundidade necessária no centro: {depth_needed:.0f} mm "
-          f"(disponível: {CHANNEL_DEPTH:.0f} mm)")
-    if depth_needed > CHANNEL_DEPTH:
+          f"largura {WIDTH:.0f} mm, moldura {FRAME_H:.0f} mm (borda de "
+          f"{EDGE_DEPTH:.0f} mm)")
+    print(f"fundo do cesto: {depth_needed:.0f} mm abaixo do piso "
+          f"(bolsão da saída: {POCKET_DEPTH:.0f} mm)")
+    if depth_needed > POCKET_DEPTH - 2.0:
         print("  AVISO: reduza BASKET_DEPTH!")
+    if WELL_LENGTH > POCKET_LENGTH - 4.0:
+        print("  AVISO: poço maior que o bolsão da saída — reduza WELL_LENGTH!")
 
     exports = {
         "v2_segmento_base": build_base(central=False),
