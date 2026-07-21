@@ -63,8 +63,33 @@ Those three numbers are *your* numbers. Every parametric part here has a
 | `parts/clearance_test.py` | your printer's real tolerances |
 | `parts/cable_clip.py` | measure a real object → parametric fit (change `CABLE_DIAMETER`, re-run) |
 | `parts/parametric_box.py` | two mating parts, friction fit, wall/perimeter thinking |
+| `parts/ralo_oculto.py` | a real multi-part product: the Ralo Oculto Inteligente (see below) |
 
 Each script has its parameters at the top and exports to `stl/` when run.
+
+## Project: Ralo Oculto Inteligente
+
+A 900 mm hidden linear drain cover in printable modules, with drainage
+slots, snap connectors between modules, and a removable comb-style
+hair-catcher cartridge. Originally generated as a Fusion 360 script
+(kept in `fusion/RaloOcultoV1/` for reference); `parts/ralo_oculto.py`
+is the same design ported to build123d so STLs export straight from
+Python.
+
+Build order:
+
+1. Print `stl/ralo_cupom_teste.stl` (100 mm coupon) and load-test it on
+   a bench before anything else.
+2. Measure the real drain channel with calipers and set `TOTAL_LENGTH`,
+   `DRAIN_WIDTH`, and `MODULE_COUNT` accordingly. The script warns when
+   a module won't fit your bed (`PRINTER_BED`).
+3. Print one `inicio` + one `fim` module (plus `meio` modules if
+   `MODULE_COUNT` > 2) and the `filtro_pente` cartridges.
+4. Fit test tells you whether to loosen `CONNECTOR_CLEARANCE`.
+
+Material: PLA for fit tests only — use **PETG or ASA** for the installed
+part (wet, warm, load-bearing = PLA's three weaknesses). This is an
+unvalidated prototype: never let anyone step on it without bench tests.
 
 ## How to ask AI for new parts
 

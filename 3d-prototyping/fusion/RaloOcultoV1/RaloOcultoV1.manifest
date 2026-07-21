@@ -1,0 +1,10 @@
+{
+  "autodeskProduct": "Fusion360",
+  "type": "script",
+  "author": "OpenAI para Rafaell",
+  "description": {
+    "": "Gera o protótipo inicial Ralo Oculto Inteligente V1 em três módulos."
+  },
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}
