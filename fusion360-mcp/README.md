@@ -1,6 +1,32 @@
 # Conectar o Claude ao Fusion 360 via MCP
 
-Este guia instala o **[Fusion 360 MCP Bridge](https://github.com/ndoo/fusion360-mcp-bridge)** (projeto open-source, licença MIT), que permite ao Claude controlar o Autodesk Fusion 360 por linguagem natural: criar sketches, extrusões, montagens, exportar arquivos e capturar screenshots do viewport.
+## ⭐ Opção oficial da Autodesk (recomendada)
+
+A Autodesk oferece **dois servidores MCP oficiais**:
+
+### 1. Fusion MCP (local — modelagem ao vivo)
+
+Conecta o Claude a uma sessão ativa do Fusion no seu computador: executar scripts, criar geometria, automatizar comandos.
+
+1. No **Fusion**: Preferências → **General → API** → marque **Fusion MCP Server** e anote a porta (padrão: `27182`)
+2. No **Claude Desktop**: barra lateral → **Customize** → aba **Connectors** → **+** → busque **"Fusion"** → instale **Autodesk Fusion** → **Enabled** → **Configure** → confirme a porta
+3. Documentação: [Connecting to the Fusion MCP Server](https://help.autodesk.com/view/fusion360/ENU/?guid=ADSKMCP_FusionDesktopMcp_connecting_to_the_fusion_mcp_server_html)
+
+### 2. Fusion Data MCP (nuvem — dados de projetos)
+
+Servidor hospedado pela Autodesk, **não precisa do Fusion aberto**. Acessa dados do Fusion Team: estrutura de projetos, pastas, arquivos, permissões. Autenticação via conta Autodesk (OAuth).
+
+1. Abra a [documentação oficial](https://help.autodesk.com/view/ADSKMCP/ENU/?guid=ADSKMCP_FusionCloudMcp_connecting_to_the_fusion_data_mcp_server_html) e copie a **URL do servidor** indicada lá
+2. No **claude.ai** (web) ou **Claude Desktop**: Configurações → **Conectores** → **Adicionar conector customizado** → cole a URL → faça login com sua conta Autodesk
+3. Por ser um servidor remoto, funciona inclusive em sessões do Claude na nuvem (claude.ai/code)
+
+**Qual usar?** Para modelar/automatizar CAD com o Claude: **Fusion MCP (local)**. Para consultar e organizar projetos/arquivos na nuvem: **Fusion Data MCP**. Os dois podem coexistir.
+
+---
+
+## Alternativa da comunidade (para Claude Code CLI)
+
+Este guia também instala o **[Fusion 360 MCP Bridge](https://github.com/ndoo/fusion360-mcp-bridge)** (projeto open-source, licença MIT), útil sobretudo com o **Claude Code (CLI)**: permite ao Claude controlar o Fusion por linguagem natural — criar sketches, extrusões, montagens, exportar arquivos e capturar screenshots do viewport.
 
 ## Como funciona
 
