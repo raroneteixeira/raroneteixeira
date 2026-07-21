@@ -69,13 +69,15 @@ Each script has its parameters at the top and exports to `stl/` when run.
 
 ## Project: Ralo Oculto Inteligente
 
-**Current version: V2** (`parts/ralo_oculto_v2.py`) — real dimensions
-890 × 35 mm in 5 printable segments (~178 mm, fits any Bambu bed), glued
-base with alignment keys, flip-up doors hinged on a 1.75 mm filament pin,
-and a central removable hair-catcher basket whose closed bottom holds a
-~14 mm water column as a passive odor seal. Print 4× `v2_segmento_base`,
-1× `v2_segmento_central`, 5× `v2_porta`, 1× `v2_cesto_retentor` (PETG).
-Validate first: 1 segment + 1 door + the clearance gauge.
+**Current version: V2.1** (`parts/ralo_oculto_v2.py`) — real dimensions
+890 × 50 mm, 35 mm channel depth, in 5 printable segments (~178 mm, fits
+any Bambu bed): glued base with alignment keys, flip-up doors hinged on a
+1.75 mm filament pin, door tops covered in rounded massage/anti-slip
+domes, and a central removable hair-catcher basket whose closed bottom
+holds a ~10 mm water column as a passive odor seal. Print 4×
+`v2_segmento_base`, 1× `v2_segmento_central`, 5× `v2_porta` (6 walls,
+40% infill), 1× `v2_cesto_retentor` (PETG). Validate first: 1 segment +
+1 door + the clearance gauge.
 
 ### V1 (superseded — wrong width, kept for reference)
 
