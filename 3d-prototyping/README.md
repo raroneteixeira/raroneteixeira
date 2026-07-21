@@ -69,19 +69,18 @@ Each script has its parameters at the top and exports to `stl/` when run.
 
 ## Project: Ralo Oculto Inteligente
 
-**Current version: V2.2** (`parts/ralo_oculto_v2.py`) — matches the real
-channel profile: 890 × 50 mm mouth, 15 mm deep edges with a 4 mm ridge
-(the frame walls get a bottom rebate that keys over it), 30 mm central
-trough, and a ~73 mm outlet pocket with a 40 mm pipe. Frame is 15 mm
-tall and sits flush with the floor. Everything else per V2.1: 5 printable
-segments (~178 mm, fits
-any Bambu bed): glued base with alignment keys, flip-up doors hinged on a
-1.75 mm filament pin, door tops covered in rounded massage/anti-slip
-domes, and a central removable hair-catcher basket whose closed bottom
-holds a ~10 mm water column as a passive odor seal. Print 4×
-`v2_segmento_base`, 1× `v2_segmento_central`, 5× `v2_porta` (6 walls,
-40% infill), 1× `v2_cesto_retentor` (PETG). Validate first: 1 segment +
-1 door + the clearance gauge.
+**Current version: V3** (`parts/ralo_oculto_v2.py`) — matches the real
+channel profile (890 × 50 mm mouth, 15 mm edges with a 4 mm ridge the
+frame walls key over, 30 mm trough, ~73 mm outlet pocket, 40 mm pipe)
+and adds a **foot-operated sliding shutter**: a central sump box with
+inlet windows and 3 flow slots in its floor, plus a slider plate whose
+stem rises through a slot in the central door, flush with the floor.
+Nudge the stem 8 mm with your toe: slots aligned = open, shifted =
+closed (odor/bug block). No springs, generous clearances. Print with
+PETG: 4× `v2_segmento_base`, 1× `v2_segmento_central`, 4× `v2_porta`,
+1× `v2_porta_central`, 1× `v2_camara_registro`, 1×
+`v2_registro_deslizante`, 1× `v2_cesto_retentor`. Validate first: 1
+segment + 1 door + the clearance gauge.
 
 ### V1 (superseded — wrong width, kept for reference)
 
